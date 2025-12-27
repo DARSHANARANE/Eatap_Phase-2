@@ -17,6 +17,7 @@ This project is being developed collaboratively as a full-stack application usin
 
 
 🛠️ Tech Stack
+
       Frontend
       
           React JS (Vite)
