@@ -1,23 +1,24 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "./authSlice";
+
 const Login = () => {
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    dispatch(login({ email, password }) as any);
+  };
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-80">
-      <h2 className="text-xl font-bold mb-4 text-center">Login</h2>
-
-      <input
-        type="email"
-        placeholder="Email"
-        className="w-full mb-3 p-2 border rounded"
-      />
-
+    <div>
+      <input onChange={(e) => setEmail(e.target.value)} />
       <input
         type="password"
-        placeholder="Password"
-        className="w-full mb-4 p-2 border rounded"
+        onChange={(e) => setPassword(e.target.value)}
       />
-
-      <button className="w-full bg-blue-600 text-white py-2 rounded">
-        Login
-      </button>
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 };
