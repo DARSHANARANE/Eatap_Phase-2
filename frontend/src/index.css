@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+.colored-shadow {
+  box-shadow:
+    0 20px 40px rgba(99, 102, 241, 0.35),
+    0 10px 20px rgba(168, 85, 247, 0.25);
+}
 
 
 
