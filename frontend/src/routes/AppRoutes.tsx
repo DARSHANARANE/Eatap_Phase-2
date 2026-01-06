@@ -1,44 +1,32 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "../features/auth/Login";
-import Register from "../features/auth/Register";
-import Admin from "../pages/Admin";
-import Owner from "../pages/Owner";
-import Student from "../pages/Student";
+import LoginPage from "../pages/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
+import AdminLayout from "../layouts/AdminLayout";
+
+import Dashboard from "../pages/admin/Dashboard";
+import Users from "../pages/admin/Users";
+import Settings from "../pages/admin/Settings";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* ADMIN FLOW */}
       <Route
         path="/admin"
         element={
           <ProtectedRoute role="admin">
-            <Admin />
+            <AdminLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<Dashboard />} />
+        <Route path="users" element={<Users />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
 
-      <Route
-        path="/owner"
-        element={
-          <ProtectedRoute role="owner">
-            <Owner />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/student"
-        element={
-          <ProtectedRoute role="student">
-            <Student />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route path="*" element={<Navigate to="/login" />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };
