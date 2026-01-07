@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Login from "../features/auth/Login";
 import Register from "../features/auth/Register";
-import BannerSvg from "../assets/banner-illustration.svg";
+import BannerCarousel from "../components/BannerCarousel";
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,25 +12,7 @@ const LoginPage = () => {
       <div className=" w-[100%] max-w-5xl h-[550px] bg-white rounded-xl overflow-hidden flex  md:colored-shadow md:shadow-lg">
         
         {/* LEFT BANNER */}
-       <div className="w-1/2 hidden md:flex flex-col justify-center px-12 text-white
-                bg-gradient-to-br from-indigo-600 to-pink-500 relative overflow-hidden">
-
-                <img
-                  src={BannerSvg}
-                  alt="Banner Illustration"
-                  className="absolute bottom-0 right-0 w-72 opacity-20"
-                />
-
-                <h1 className="text-3xl font-bold mb-4 relative z-10">
-                  Welcome to Eatap
-                </h1>
-
-                <p className="text-sm opacity-90 relative z-10">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                  sed do eiusmod tempor incididunt ut labore.
-                </p>
-        </div>
-
+        <BannerCarousel />
 
         {/* RIGHT FORM */}
         <div className="w-full md:w-1/2 flex items-center justify-center">

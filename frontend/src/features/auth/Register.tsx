@@ -1,5 +1,7 @@
 import { useState } from "react";
-
+import { FaUser  } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { PiPasswordFill } from "react-icons/pi";
 const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -46,36 +48,39 @@ const Register = () => {
       </h2>
 
       <form onSubmit={handleSubmit}>
+        <div className="flex items-center text-gray-500">
+        <FaUser className="flex items-center gap-1 mb-4 mr-2" />
         <input
           name="name"
           placeholder="Full Name"
-          className="w-full mb-4 px-4 py-2 border rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="w-full border-b border-gray-300 py-2 mb-5 focus:outline-none focus:border-purple-600"
           onChange={handleChange}
         />
-
+        </div>
+        <div className="flex items-center text-gray-500">
+          <MdEmail className="flex items-center gap-1 mb-4 mr-2" />
         <input
           name="email"
-          type="email"
+          type="email" 
           placeholder="Email"
-          className="w-full mb-4 px-4 py-2 border rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="w-full border-b border-gray-300 py-2 mb-5 focus:outline-none focus:border-purple-600"
           onChange={handleChange}
         />
-
+        </div>
+        <div className="flex items-center text-gray-500">
+        <PiPasswordFill className="flex items-center gap-1 mb-4 mr-2" />
         <input
-          name="password"
+          name="password" 
           type="password"
           placeholder="Password"
-          className="w-full mb-4 px-4 py-2 border rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="w-full border-b border-gray-300 py-2 mb-5 focus:outline-none focus:border-purple-600"
           onChange={handleChange}
         />
+        </div>
 
         <select
           name="role"
-          className="w-full mb-6 px-4 py-2 border rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="w-full border-b border-gray-300  py-2 mb-5 focus:outline-none focus:border-purple-600"
           onChange={handleChange}
         >
           <option value="student">Student</option>
@@ -84,8 +89,7 @@ const Register = () => {
 
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-indigo-500 to-pink-500
-                     text-white py-2 rounded-lg font-medium hover:opacity-90"
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-md font-semibold transition"
         >
           Register
         </button>

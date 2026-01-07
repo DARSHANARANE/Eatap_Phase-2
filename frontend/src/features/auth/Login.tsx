@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "./authSlice";
+import { FaUser  } from "react-icons/fa";
+import { PiPasswordFill } from "react-icons/pi";
 
 const Login = () => {
   const dispatch = useDispatch<any>();
@@ -31,7 +33,8 @@ const Login = () => {
       <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center text-left">
             Log In
       </h2>
-
+      <div className="flex items-center text-gray-500">
+      <FaUser className="flex items-center gap-1 mb-4 mr-2" />
       <input
         type="email"
         placeholder="Email"
@@ -39,7 +42,9 @@ const Login = () => {
         onChange={(e) => setEmail(e.target.value)}
          className="w-full border-b border-gray-300 py-2 mb-5 focus:outline-none focus:border-purple-600"
       />
-
+      </div>
+      <div className="flex items-center text-gray-500">
+      <PiPasswordFill className="flex items-center gap-1 mb-4 mr-2" />
       <input
         type="password"
         placeholder="Password"
@@ -47,7 +52,7 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
          className="w-full border-b border-gray-300 py-2 mb-5 focus:outline-none focus:border-purple-600"
       />
-
+      </div>
       <div className="flex items-center justify-between text-sm mb-4">
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" />
