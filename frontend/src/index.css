@@ -6,5 +6,111 @@
     0 10px 20px rgba(168, 85, 247, 0.25);
 }
 
+/* Banner Carousel  */
 
+/* ✅ Background gradient (Aurora style) */
+.heroBg {
+  background: radial-gradient(circle at top, rgba(168, 85, 247, 0.45), transparent 55%),
+    radial-gradient(circle at bottom, rgba(236, 72, 153, 0.35), transparent 60%),
+    linear-gradient(135deg, #070a17, #2e026d, #0b1220);
+  background-size: 200% 200%;
+  animation: aurora 10s ease-in-out infinite;
+}
 
+@keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ✅ Text animation */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ✅ Image animation */
+@keyframes imgFade {
+  from {
+    opacity: 0;
+    transform: translateX(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* ✅ Waves */
+.waveWrap {
+  height: 180px;
+  overflow: hidden;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  height: 180px;
+}
+
+/* ✅ Wave layer 1 */
+.wave1 {
+  animation: waveMove1 9s linear infinite;
+  opacity: 0.25;
+}
+
+/* ✅ Wave layer 2 */
+.wave2 {
+  animation: waveMove2 13s linear infinite;
+  opacity: 0.35;
+}
+
+@keyframes waveMove1 {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes waveMove2 {
+  from {
+    transform: translateX(-10%);
+  }
+  to {
+    transform: translateX(-60%);
+  }
+}
+
+.shape-fill {
+  fill: rgba(255, 255, 255, 0.18);
+}
+
+.shape-fill2 {
+  fill: rgba(255, 255, 255, 0.1);
+}
+
+/* ✅ Mobile wave height smaller */
+@media (max-width: 768px) {
+  .waveWrap {
+    height: 120px;
+  }
+
+  .wave {
+    height: 120px;
+  }
+}
