@@ -22,7 +22,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["student", "owner", "admin"],
       default: "student"
-    }
+    },
+    status: {
+      type: String,
+      enum: ["pending_profile", "pending_admin", "active", "inactive"],
+      default: function () {
+        return this.role === "owner" ? "pending_profile" : "active";
+      }
+}
   },
   { timestamps: true }
 );

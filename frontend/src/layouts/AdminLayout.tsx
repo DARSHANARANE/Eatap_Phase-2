@@ -23,7 +23,10 @@ const AdminLayout = () => {
           <button onClick={() => navigate("/admin")} className="text-left hover:opacity-80">
             Dashboard
           </button>
-          <button onClick={() => navigate("/admin/users")} className="text-left hover:opacity-80">
+          <button onClick={() => navigate("/admin/mess-owners")} className="text-left hover:opacity-80">
+            Mess Owners
+          </button>
+          <button onClick={() => navigate("/admin/students")} className="text-left hover:opacity-80">
             Users
           </button>
           <button onClick={() => navigate("/admin/settings")} className="text-left hover:opacity-80">
