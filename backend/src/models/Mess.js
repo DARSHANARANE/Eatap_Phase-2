@@ -29,10 +29,12 @@ const MessSchema = new mongoose.Schema(
       enum: ["veg", "nonveg", "both"],
       default: "veg"
     },
-    isActive: {
-      type: Boolean,
-      default: false
-    }
+    status: {
+        type: String,
+        enum: ["pending", "approved", "rejected"],
+        default: "pending",
+      }
+
   },
   { timestamps: true }
 );

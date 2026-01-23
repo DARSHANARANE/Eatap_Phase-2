@@ -1,6 +1,8 @@
-// frontend/src/pages/MessDetails.tsx
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import MenuDialog from "../../../components/common/MenuDialog";
+import DeleteDialog from "../../../components/common/DeleteDialog";
+
 
 interface Menu {
   _id: string;
@@ -13,29 +15,28 @@ interface Menu {
 const MessDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
   const [menus, setMenus] = useState<Menu[]>([]);
+  const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null);
+
+  const [openMenuDialog, setOpenMenuDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const token = localStorage.getItem("token");
 
-  // Fetch menus for this mess
+  // Fetch menus
   const fetchMenus = async () => {
     if (!id) return;
 
-    try {
-      const res = await fetch(`http://localhost:5000/api/menu/mess/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const res = await fetch(
+      `http://localhost:5000/api/menu/mess/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-      if (!res.ok) throw new Error("Failed to fetch menus");
-
-      const data = await res.json();
-      setMenus(data);
-    } catch (err) {
-      console.error(err);
-      alert("Error fetching menus");
-    }
+    const data = await res.json();
+    setMenus(data);
   };
 
   useEffect(() => {
@@ -43,84 +44,66 @@ const MessDetails = () => {
   }, [id]);
 
   // Add Menu
-  const addMenu = async () => {
-    const lunch = prompt("Enter lunch items (comma separated)")?.split(",") || [];
-    const dinner = prompt("Enter dinner items (comma separated)")?.split(",") || [];
-    const date = prompt("Enter date (YYYY-MM-DD)") || new Date().toISOString().split("T")[0];
+  const handleAddMenu = async (data: any) => {
+    const res = await fetch(`http://localhost:5000/api/menu`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ ...data, messId: id }),
+    });
 
-    try {
-      const res = await fetch(`http://localhost:5000/api/menu`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          messId: id,
-          date,
-          lunch,
-          dinner,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to add menu");
-
-      const newMenu = await res.json();
-      setMenus((prev) => [...prev, newMenu]);
-      alert("Menu added successfully 🎉");
-    } catch (err) {
-      console.error(err);
-      alert("Error adding menu");
-    }
+    const newMenu = await res.json();
+    setMenus((prev) => [...prev, newMenu]);
+    setOpenMenuDialog(false);
   };
 
   // Edit Menu
-  const editMenu = async (menu: Menu) => {
-    const lunch = prompt("Edit lunch items (comma separated)", menu.lunch.join(","))?.split(",") || [];
-    const dinner = prompt("Edit dinner items (comma separated)", menu.dinner.join(","))?.split(",") || [];
-    const date = prompt("Edit date (YYYY-MM-DD)", menu.date) || menu.date;
+  const handleEditMenu = async (data: any) => {
+    if (!selectedMenu) return;
 
-    try {
-      const res = await fetch(`http://localhost:5000/api/menu/${menu._id}`, {
+    const res = await fetch(
+      `http://localhost:5000/api/menu/${selectedMenu._id}`,
+      {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ date, lunch, dinner }),
-      });
+        body: JSON.stringify(data),
+      }
+    );
 
-      if (!res.ok) throw new Error("Failed to update menu");
+    const updatedMenu = await res.json();
+    setMenus((prev) =>
+      prev.map((m) =>
+        m._id === updatedMenu._id ? updatedMenu : m
+      )
+    );
 
-      const updatedMenu = await res.json();
-      setMenus((prev) => prev.map((m) => (m._id === updatedMenu._id ? updatedMenu : m)));
-      alert("Menu updated successfully 🎉");
-    } catch (err) {
-      console.error(err);
-      alert("Error updating menu");
-    }
+    setOpenMenuDialog(false);
+    setSelectedMenu(null);
   };
 
   // Delete Menu
-  const deleteMenu = async (menuId: string) => {
-    if (!confirm("Are you sure you want to delete this menu?")) return;
+  const handleDeleteMenu = async () => {
+    if (!selectedMenu) return;
 
-    try {
-      const res = await fetch(`http://localhost:5000/api/menu/${menuId}`, {
+    await fetch(
+      `http://localhost:5000/api/menu/${selectedMenu._id}`,
+      {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-      if (!res.ok) throw new Error("Failed to delete menu");
+    setMenus((prev) =>
+      prev.filter((m) => m._id !== selectedMenu._id)
+    );
 
-      setMenus((prev) => prev.filter((m) => m._id !== menuId));
-      alert("Menu deleted successfully 🎉");
-    } catch (err) {
-      console.error(err);
-      alert("Error deleting menu");
-    }
+    setOpenDeleteDialog(false);
+    setSelectedMenu(null);
   };
 
   return (
@@ -142,7 +125,10 @@ const MessDetails = () => {
           <h2 className="text-lg font-semibold">Menus</h2>
           <button
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
-            onClick={addMenu}
+            onClick={() => {
+              setSelectedMenu(null);
+              setOpenMenuDialog(true);
+            }}
           >
             + Add Menu
           </button>
@@ -161,19 +147,27 @@ const MessDetails = () => {
           <tbody>
             {menus.map((menu) => (
               <tr key={menu._id} className="border-b">
-                <td className="py-2">{new Date(menu.date).toLocaleDateString()}</td>
+                <td className="py-2">
+                  {new Date(menu.date).toLocaleDateString()}
+                </td>
                 <td>{menu.lunch.join(", ")}</td>
                 <td>{menu.dinner.join(", ")}</td>
                 <td className="space-x-2">
                   <button
                     className="text-blue-600"
-                    onClick={() => editMenu(menu)}
+                    onClick={() => {
+                      setSelectedMenu(menu);
+                      setOpenMenuDialog(true);
+                    }}
                   >
                     Edit
                   </button>
                   <button
                     className="text-red-600"
-                    onClick={() => deleteMenu(menu._id)}
+                    onClick={() => {
+                      setSelectedMenu(menu);
+                      setOpenDeleteDialog(true);
+                    }}
                   >
                     Delete
                   </button>
@@ -184,9 +178,25 @@ const MessDetails = () => {
         </table>
 
         {menus.length === 0 && (
-          <p className="text-sm text-gray-500 mt-4">No menu added yet</p>
+          <p className="text-sm text-gray-500 mt-4">
+            No menu added yet
+          </p>
         )}
       </div>
+
+      {/* Dialogs */}
+      <MenuDialog
+        open={openMenuDialog}
+        initialData={selectedMenu || undefined}
+        onClose={() => setOpenMenuDialog(false)}
+        onSubmit={selectedMenu ? handleEditMenu : handleAddMenu}
+      />
+
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        onConfirm={handleDeleteMenu}
+      />
     </div>
   );
 };
