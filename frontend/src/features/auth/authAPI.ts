@@ -10,3 +10,15 @@ export const loginUser = async (data: {
   );
   return res.data;
 };
+
+export const verifyToken = async (token: string) => {
+  const res = await axios.get(
+    "http://localhost:5000/api/users/verify",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
