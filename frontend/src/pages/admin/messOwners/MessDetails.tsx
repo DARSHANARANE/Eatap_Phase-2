@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MenuDialog from "../../../components/common/MenuDialog";
 import DeleteDialog from "../../../components/common/DeleteDialog";
-
-
+import TopNav from "../../../layouts/TopNav";
+import { Pencil, Trash2, Plus  } from "lucide-react";
 interface Menu {
   _id: string;
   messId: string;
@@ -11,7 +11,6 @@ interface Menu {
   lunch: string[];
   dinner: string[];
 }
-
 const MessDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -107,82 +106,94 @@ const MessDetails = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Mess Menus</h1>
-        <button
-          onClick={() => navigate(-1)}
-          className="text-sm text-gray-600 hover:underline"
-        >
-          ← Back
-        </button>
-      </div>
-
+      <TopNav
+        title="Mess Details"
+        showBackButton={true}
+      />  
       {/* Menu Section */}
-      <div className="bg-white rounded-xl border shadow-sm p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Menus</h2>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl font-semibold text-gray-800">Menus</h2>
+        {/* Add Menu Button */}
           <button
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+            className="flex items-center gap-2 bg-indigo-800 hover:bg-indigo-700 shadow-sm transition text-white px-5 py-2 rounded-xl text-sm font-medium"
             onClick={() => {
               setSelectedMenu(null);
               setOpenMenuDialog(true);
             }}
-          >
-            + Add Menu
+           >
+           <Plus size={18} /> Add Menu
           </button>
         </div>
-
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b text-left">
-              <th className="py-2">Date</th>
-              <th>Lunch</th>
-              <th>Dinner</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {menus.map((menu) => (
-              <tr key={menu._id} className="border-b">
-                <td className="py-2">
-                  {new Date(menu.date).toLocaleDateString()}
-                </td>
-                <td>{menu.lunch.join(", ")}</td>
-                <td>{menu.dinner.join(", ")}</td>
-                <td className="space-x-2">
-                  <button
-                    className="text-blue-600"
-                    onClick={() => {
-                      setSelectedMenu(menu);
-                      setOpenMenuDialog(true);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="text-red-600"
-                    onClick={() => {
-                      setSelectedMenu(menu);
-                      setOpenDeleteDialog(true);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-gray-200 overflow-hidden">
+            
+            {/* Table Head */}
+            <thead className="bg-indigo-800 text-white text-xs uppercase tracking-wider">
+              <tr>
+                <th className="px-6 py-3 text-left">Date</th>
+                <th className="px-6 py-3 text-left">Lunch</th>
+                <th className="px-6 py-3 text-left">Dinner</th>
+                <th className="px-6 py-3 text-center">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            
+            {/* Table Body */}
+            <tbody className="divide-y divide-gray-100">
+              {menus.map((menu) => (
+                <tr
+                  key={menu._id}
+                  className="hover:bg-gray-50 transition even:bg-gray-200 odd:bg-white"
+                >
+                  <td className="px-6 py-4 font-medium">
+                    {new Date(menu.date).toLocaleDateString()}
+                  </td>
+
+                  <td className="px-6 py-4">
+                    {menu.lunch.join(", ")}
+                  </td>
+
+                  <td className="px-6 py-4">
+                    {menu.dinner.join(", ")}
+                  </td>
+                  <td className="px-6 py-4 text-center space-x-3">
+                    <button
+                      className="p-2 rounded-full hover:bg-indigo-100 text-indigo-600 transition"
+                      onClick={() => {
+                        setSelectedMenu(menu);
+                        setOpenMenuDialog(true);
+                      }}
+                    >
+                      <Pencil size={16} />
+                    </button>
+
+                    <button
+                      className="p-2 rounded-full hover:bg-red-100 text-red-600 transition"
+                      onClick={() => {
+                        setSelectedMenu(menu);
+                        setOpenDeleteDialog(true);
+                      }}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {menus.length === 0 && (
-          <p className="text-sm text-gray-500 mt-4">
-            No menu added yet
-          </p>
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-sm">
+              No menus added yet
+            </p>
+          </div>
         )}
-      </div>
+     </div>
+
 
       {/* Dialogs */}
       <MenuDialog
@@ -200,5 +211,6 @@ const MessDetails = () => {
     </div>
   );
 };
+
 
 export default MessDetails;
