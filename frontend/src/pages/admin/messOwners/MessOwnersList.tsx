@@ -1,6 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import TopNav from "../../../layouts/TopNav";
+import FilterBar from "../../../components/common/table/FilterBar";
+import { Check, X, Eye  } from "lucide-react";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableHeader,
+  TableCell,
+} from "../../../components/common/table/TableUI";
+
 
 interface Owner {
   _id: string;
@@ -121,151 +133,105 @@ const MessOwnersList = () => {
   if (loading) return <p className="p-6">Loading...</p>;
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">Mess Owners</h1>
+  <div className="min-h-scree">
 
-      {/* 🔢 Status badges */}
-      <div className="flex gap-4 mb-4">
-        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded">
-          Pending: {counts.pending}
-        </span>
-        <span className="bg-green-100 text-green-700 px-3 py-1 rounded">
-          Approved: {counts.approved}
-        </span>
-        <span className="bg-red-100 text-red-700 px-3 py-1 rounded">
-          Rejected: {counts.rejected}
-        </span>
-      </div>
+    <TopNav
+      title="Mess Owners"
+      subtitle="Manage and approve mess registrations"
+      showBackButton={true}
+    />
+      <FilterBar
+        search={search}
+        setSearch={setSearch}
+        statusFilter={statusFilter} 
+        setStatusFilter={setStatusFilter}
+        onExport={exportCSV}
+        showStatusButtons={true}
+        showExportButton={true}
+        total={data.length}
+        pending={counts.pending}
+        approved={counts.approved}
+        rejected={counts.rejected}
+      />
 
-      {/* 🔍 Controls */}
-      <div className="flex flex-wrap gap-3 mb-6">
-        <input
-          placeholder="Search mess / city / owner"
-          className="border px-3 py-2 rounded w-64"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
+    {/* 🖥 Modern Table */}
+    <Table>
+      <TableHead>
+        <tr>
+          <TableHeader>Owner</TableHeader>
+          <TableHeader>Mess</TableHeader>
+          <TableHeader>City</TableHeader>
+          <TableHeader>Phone</TableHeader>
+          <TableHeader>Status</TableHeader>
+          <TableHeader>Actions</TableHeader>
+        </tr>
+      </TableHead>
+      <TableBody>
+          {filteredData.map(item => (
+            <TableRow key={item._id}>
 
-        <select
-          className="border px-3 py-2 rounded"
-          value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value as any)}
-        >
-          <option value="all">All</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-        </select>
+              <TableCell>
+                <span className="font-medium text-gray-800">
+                  {item.ownerId.name}
+                </span>
+              </TableCell>
 
-        <button
-          onClick={exportCSV}
-          className="bg-gray-800 text-white px-4 py-2 rounded"
-        >
-          Export CSV
-        </button>
-      </div>
+              <TableCell>{item.messName}</TableCell>
+              <TableCell>{item.city}</TableCell>
+              <TableCell>{item.phone}</TableCell>
 
-      {/* 📱 Mobile Cards */}
-      <div className="grid gap-4 md:hidden">
-        {filteredData.map(item => (
-          <div key={item._id} className="border rounded p-4 shadow">
-            <p className="font-semibold">{item.messName}</p>
-            <p>{item.city}</p>
-            <p>{item.ownerId.name}</p>
-
-            <span
-              className={`inline-block mt-2 px-3 py-1 rounded text-sm ${
-                item.status === "approved"
-                  ? "bg-green-100 text-green-700"
-                  : item.status === "rejected"
-                  ? "bg-red-100 text-red-700"
-                  : "bg-blue-100 text-blue-700"
-              }`}
-            >
-              {item.status}
-            </span>
-
-            <div className="flex gap-2 mt-3">
+              <TableCell>
+                <span
+                  className={`px-4 py-1 rounded-full text-xs font-semibold ${
+                    item.status === "approved"
+                      ? "bg-green-100 text-green-700"
+                      : item.status === "rejected"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-blue-100 text-blue-700"
+                  }`}
+                >
+                  {item.status.toUpperCase()}
+                </span>
+              </TableCell>
+            <TableCell>
+            <div className="flex items-center gap-2">
               {item.status !== "approved" && (
                 <button
                   onClick={() => approve(item._id)}
-                  className="bg-green-600 text-white px-3 py-1 rounded"
+                  className="p-2 rounded-lg bg-green-100 text-green-600 hover:bg-green-200 transition"
+                  title="Approve"
                 >
-                  Approve
+                  <Check size={16} />
                 </button>
               )}
+
               {item.status !== "rejected" && (
                 <button
                   onClick={() => reject(item._id)}
-                  className="bg-red-600 text-white px-3 py-1 rounded"
+                  className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition"
+                  title="Reject"
                 >
-                  Reject
+                  <X size={16} />
                 </button>
               )}
-            </div>
-          </div>
-        ))}
-      </div>
 
-      {/* 🖥 Desktop Table */}
-      <div className="hidden md:block bg-white rounded-xl shadow border overflow-x-auto">
-        <table className="min-w-full">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3">Owner</th>
-              <th className="p-3">Mess</th>
-              <th className="p-3">City</th>
-              <th className="p-3">Phone</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map(item => (
-              <tr key={item._id} className="border-t text-center">
-                <td className="p-3">{item.ownerId.name}</td>
-                <td className="p-3">{item.messName}</td>
-                <td className="p-3">{item.city}</td>
-                <td className="p-3">{item.phone}</td>
-                <td className="p-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm ${
-                      item.status === "approved"
-                        ? "bg-green-100 text-green-700"
-                        : item.status === "rejected"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-blue-100 text-blue-700"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-                </td>
-                <td className="p-3 flex justify-center gap-2">
-                  {item.status !== "approved" && (
-                    <button
-                      onClick={() => approve(item._id)}
-                      className="bg-green-600 text-white px-3 py-1 rounded"
-                    >
-                      Approve
-                    </button>
-                  )}
-                  {item.status !== "rejected" && (
-                    <button
-                      onClick={() => reject(item._id)}
-                      className="bg-red-600 text-white px-3 py-1 rounded"
-                    >
-                      Reject
-                    </button>
-                  )}
-                  <button onClick={() => navigate(`/admin/mess/${item._id}`)} className="px-3 py-1 bg-blue-600 text-white rounded" > Details </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+              <button
+                onClick={() => navigate(`/admin/mess/${item._id}`)}
+                className="p-2 rounded-lg bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition"
+                title="View Details"
+              >
+                <Eye size={16} />
+              </button>
+            </div>
+           </TableCell>
+          </TableRow>
+          ))}
+      </TableBody>
+
+  </Table>
+  </div>
+);
+
 };
 
 export default MessOwnersList;

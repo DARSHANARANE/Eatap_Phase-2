@@ -65,7 +65,7 @@ const AdminLayout = () => {
                 setMobileOpen(false);
               }}
               className={`relative w-full flex items-center rounded-full transition-all duration-300 cursor-pointer
-                ${collapsed ? "justify-center px-0 py-3" : "gap-3 px-4 py-3"}
+                // ${collapsed ? "justify-center px-0 py-3" : "gap-3 px-4 py-3 "}
                 ${
                   isActive
                     ? "bg-white/90 text-[#340D5D] shadow-md"
@@ -73,9 +73,9 @@ const AdminLayout = () => {
                 }`}
             >
               {/* Active Indicator show only on desktop expanded */}
-              {isActive && !collapsed && (
+              {/* {isActive && !collapsed && (
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 w-[6px] h-[22px] rounded-full bg-[#A855F7]" />
-              )}
+              )} */}
 
               <Icon
                 size={20}

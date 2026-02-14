@@ -1,4 +1,15 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import TopNav from "../../../layouts/TopNav";
+import FilterBar from "../../../components/common/table/FilterBar";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableHeader,
+  TableCell,
+} from "../../../components/common/table/TableUI";
 
 const students = [
   {
@@ -20,32 +31,93 @@ const students = [
 ];
 
 const StudentsList = () => {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  // 🔍 Filter Logic
+  const filteredStudents = useMemo(() => {
+    return students.filter((student) => {
+      const matchSearch =
+        student.name.toLowerCase().includes(search.toLowerCase()) ||
+        student.college.toLowerCase().includes(search.toLowerCase());
+
+      const matchStatus =
+        statusFilter === "all" || student.status === statusFilter;
+
+      return matchSearch && matchStatus;
+    });
+  }, [search, statusFilter]);
+
+  // 📊 Counts
+  const counts = useMemo(() => {
+    return {
+      total: students.length,
+      active: students.filter(s => s.status === "active").length,
+      inactive: students.filter(s => s.status === "inactive").length,
+    };
+  }, []);
+
+  // 📥 Export
+  const exportCSV = () => {
+    const headers = ["Name", "Phone", "College", "Mess", "Status"];
+    const rows = filteredStudents.map(s => [
+      s.name,
+      s.phone,
+      s.college,
+      s.messName,
+      s.status,
+    ]);
+
+    const csv = [headers, ...rows].map(r => r.join(",")).join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "students.csv";
+    a.click();
+  };
+
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Students</h1>
-      </div>
+    <div className="min-h-screen">
+
+      <TopNav
+       title="Students"
+        subtitle="Manage student registrations"
+        showBackButton={true}
+       />
+
+      <FilterBar
+        search={search}
+        setSearch={setSearch}
+        onExport={exportCSV}
+        showStatusButtons={false}
+        showExportButton={true}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        total={counts.total}
+        pending={0}
+        approved={counts.active}
+        rejected={counts.inactive}
+      />
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border overflow-x-auto">
-        <table className="min-w-full">
-          <thead className="bg-gray-50">
+      <div className="bg-white rounded-b-xl shadow-sm overflow-x-auto">
+        <Table>
+          <TableHead>
             <tr>
-              <th className="px-4 py-3 text-left text-sm text-gray-600">#</th>
-              <th className="px-4 py-3 text-left text-sm text-gray-600">Name</th>
-              <th className="px-4 py-3 text-left text-sm text-gray-600">Phone</th>
-              <th className="px-4 py-3 text-left text-sm text-gray-600">College</th>
-              <th className="px-4 py-3 text-left text-sm text-gray-600">Mess</th>
-              <th className="px-4 py-3 text-left text-sm text-gray-600">Status</th>
-              <th className="px-4 py-3 text-center text-sm text-gray-600">
-                Action
-              </th>
+              <TableHeader>Sr</TableHeader>
+              <TableHeader>Name</TableHeader>
+              <TableHeader>Phone</TableHeader>
+              <TableHeader>College</TableHeader>
+              <TableHeader>Mess</TableHeader>
+              <TableHeader>Status</TableHeader>
+              <TableHeader>Action</TableHeader>
             </tr>
-          </thead>
+          </TableHead>
 
-          <tbody>
-            {students.map((student, index) => (
+          <TableBody>
+            {filteredStudents.map((student, index) => (
               <tr
                 key={student.id}
                 className="border-t hover:bg-gray-50 transition"
@@ -78,9 +150,18 @@ const StudentsList = () => {
                 </td>
               </tr>
             ))}
-          </tbody>
-        </table>
+
+            {filteredStudents.length === 0 && (
+              <tr>
+                <td colSpan={7} className="text-center py-6 text-gray-500">
+                  No students found
+                </td>
+              </tr>
+            )}
+          </TableBody>
+        </Table>
       </div>
+
     </div>
   );
 };
