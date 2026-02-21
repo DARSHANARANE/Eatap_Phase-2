@@ -34,7 +34,11 @@ const Dashboard = () => {
   return (
     <div>
       {/* Top Navbar */}
-      <TopNav />
+      <TopNav
+      title="Dashboard"
+      subtitle="Welcome back, Admin!"
+      showIcons
+    />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-6 mb-8">
@@ -64,27 +68,56 @@ const Dashboard = () => {
       })}
     </div>
 
-      {/* Quick Actions */}
-      <div className="bg-white rounded-xl shadow-sm p-6 ">
-        <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-4 p-8 gap-6">
-          {/* mess owners */}
+      {/* Quick Actions */}
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold mb-6 text-gray-800">Quick Actions</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          {/* Mess Owners */}
           <Link
             to="/admin/mess-owners"
-            className=" flex items-center justify-start gap-2 shadow-md text-center bg-blue-500 p-10 rounded-2xl transition-all hover:bg-blue-300 text-white hover:text-gray-800"
+            className="group relative bg-gradient-to-br from-blue-50 to-blue-100 
+              hover:from-blue-100 hover:to-blue-300
+              p-6 rounded-2xl transition-all duration-300 
+              shadow-sm hover:shadow-lg hover:-translate-y-1"
           >
-            View Mess Owners <ArrowRight size={22} />
+            <div className="flex items-center justify-between">
+              <span className="text-base font-semibold text-blue-700">
+                View Mess Owners
+              </span>
+
+              <div className="bg-blue-600 text-white p-3 rounded-xl 
+                group-hover:scale-110 transition">
+                <ArrowRight size={18} />
+              </div>
+            </div>
           </Link>
-          {/* students */}
+
+          {/* Students */}
           <Link
             to="/admin/students"
-            className="flex items-center justify-start gap-2 p-5 shadow-md text-center bg-green-700 py-3 rounded-2xl hover:bg-green-300 text-white transition hover:text-gray-800"
+            className="group relative bg-gradient-to-br from-green-50 to-green-100 
+              hover:from-green-100 hover:to-green-300
+              p-6 rounded-2xl transition-all duration-300 
+              shadow-sm hover:shadow-lg hover:-translate-y-1"
           >
-            View Students <ArrowRight size={22} />
+            <div className="flex items-center justify-between">
+              <span className="text-base font-semibold text-green-700">
+                View Students
+              </span>
+
+              <div className="bg-green-600 text-white p-3 rounded-xl 
+                group-hover:scale-110 transition">
+                <ArrowRight size={18} />
+              </div>
+            </div>
           </Link>
+
         </div>
       </div>
+
     </div>
   );
 };
