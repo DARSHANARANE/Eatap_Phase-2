@@ -1,57 +1,22 @@
-import { Outlet, NavLink } from "react-router-dom";
+import DashboardLayout from "./DashboardLayout";
+import {
+  LayoutDashboard,
+  Settings,
+  UtensilsCrossed,
+  ClipboardList,
+  User
+} from "lucide-react";
 
 const OwnerLayout = () => {
-  return (
-    <div className="flex min-h-screen bg-gray-50">
-      
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md hidden md:block">
-        <div className="p-4 text-xl font-bold text-purple-600">
-          Mess Owner
-        </div>
+  const menu = [
+    { label: "Dashboard", path: "/owner/dashboard", icon: LayoutDashboard },
+    { label: "Profile", path: "/owner/profile", icon: User }, // ✅ Added
+    { label: "Menu Management", path: "/owner/menu", icon: UtensilsCrossed },
+    { label: "Orders", path: "/owner/orders", icon: ClipboardList },
+    { label: "Settings", path: "/owner/settings", icon: Settings },
+  ];
 
-        <nav className="px-4 space-y-2">
-          <NavLink
-            to="/owner"
-            className={({ isActive }) =>
-              `block p-2 rounded hover:bg-purple-100 ${isActive ? "bg-purple-100 font-semibold" : ""}`
-            }
-          >
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/owner/students"
-            className={({ isActive }) =>
-              `block p-2 rounded hover:bg-purple-100 ${isActive ? "bg-purple-100 font-semibold" : ""}`
-            }
-          >
-            Students
-          </NavLink>
-          <NavLink
-            to="/owner/menu/menumanagement"
-            className={({ isActive }) =>
-              `block p-2 rounded hover:bg-purple-100 ${isActive ? "bg-purple-100 font-semibold" : ""}`
-            }
-          >
-            Menu
-          </NavLink>
-          <NavLink
-            to="/owner/menu"
-            className={({ isActive }) =>
-              `block p-2 rounded hover:bg-purple-100 ${isActive ? "bg-purple-100 font-semibold" : ""}`
-            }
-          >
-            Earnings
-          </NavLink>
-        </nav>
-      </aside>
-
-      {/* Main content */}
-      <main className="flex-1 p-6">
-        <Outlet />
-      </main>
-    </div>
-  );
+  return <DashboardLayout title="Mess Owner Panel" menu={menu} />;
 };
 
 export default OwnerLayout;
