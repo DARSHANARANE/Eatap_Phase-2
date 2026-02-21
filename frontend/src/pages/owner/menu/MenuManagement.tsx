@@ -1,24 +1,22 @@
-
-import MessMenuManager from "../../../components/menu/MessMenuManager";
+import MenuManager from "../../../components/menu/MenuManager";
 import { useOwner } from "../../../hooks/useOwner";
 
-
-const OwnerMenuPage = () => {
+const MenuManagement = () => {
   const { owner, loading } = useOwner();
 
+  console.log("owner:", owner);
+
   if (loading) return <p>Loading...</p>;
-  if (!owner) return null;
+
+  // FIX HERE
+  if (!owner?.messId) return <p>No mess assigned</p>;
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">My Menu</h1>
-
-      <MessMenuManager
-        messId={owner.messId}
-        canDelete={false} // optional rule
-      />
-    </div>
+    <MenuManager
+      messId={owner.messId}
+      title="Manage Menu"
+    />
   );
 };
 
-export default OwnerMenuPage;
+export default MenuManagement;
