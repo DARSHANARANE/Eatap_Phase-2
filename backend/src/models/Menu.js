@@ -7,22 +7,18 @@ const menuSchema = new mongoose.Schema(
       ref: "Mess",
       required: true,
     },
-
     date: {
-      type: String, // YYYY-MM-DD
+      type: String,
       required: true,
     },
-
     lunch: {
       type: [String],
       default: [],
     },
-
     dinner: {
       type: [String],
       default: [],
     },
-
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -31,7 +27,7 @@ const menuSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// One menu per mess per day
+// ✅ Prevent duplicate menu per mess per date
 menuSchema.index({ messId: 1, date: 1 }, { unique: true });
 
 export default mongoose.model("Menu", menuSchema);

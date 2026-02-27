@@ -33,7 +33,7 @@ const TopNav = ({
         )}
 
         <div>
-          <h1 className="text-2xl font-semibold text-gray-800 uppercase tracking-wide">
+          <h1 className="text-2xl font-semibold text-gray-800  tracking-wide">
             {title}
           </h1>
           {subtitle && (

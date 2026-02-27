@@ -1,6 +1,5 @@
 import DashboardTemplate from "../../components/dashboard/DashboardTemplate";
 import { Users, Store } from "lucide-react";
-
 import { useOwner } from "../../hooks/useOwner";
 import { Navigate } from "react-router-dom";
 const OwnerDashboard = () => {
@@ -30,6 +29,14 @@ const OwnerDashboard = () => {
 
   const quickActions = [
     {
+      label: "Today's Menu",
+      to: "/owner/todays-menu",
+      colorFrom: "from-green-50",
+      colorTo: "to-green-100 hover:to-green-300",
+      textColor: "text-green-700",
+      buttonColor: "bg-green-600",
+    },
+    {
       label: "Manage Menu",
       to: "/owner/menu",
       colorFrom: "from-purple-50",
@@ -38,12 +45,12 @@ const OwnerDashboard = () => {
       buttonColor: "bg-purple-600",
     },
     {
-      label: "View Students",
-      to: "/owner/students",
-      colorFrom: "from-green-50",
-      colorTo: "to-green-100 hover:to-green-300",
-      textColor: "text-green-700",
-      buttonColor: "bg-green-600",
+      label: "View Orders",
+      to: "/owner/orders",
+      colorFrom: "from-amber-50",
+      colorTo: "to-amber-100 hover:to-amber-300",
+      textColor: "text-amber-700",
+      buttonColor: "bg-amber-600 hover:bg-amber-700",
     },
   ];
 

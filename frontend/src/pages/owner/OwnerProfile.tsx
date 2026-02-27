@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useOwner } from "../../hooks/useOwner";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const OwnerProfile = () => {
   const { owner, loading: ownerLoading } = useOwner();
@@ -56,6 +57,7 @@ const OwnerProfile = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        toast.success("Profile Updated Successfully 🎉");
       } else {
         // ✅ CREATE PROFILE
         await axios.post(
@@ -65,6 +67,7 @@ const OwnerProfile = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        toast.success("Profile Created Successfully 🎉");
       }
 
       navigate("/owner/dashboard");

@@ -20,6 +20,8 @@ import Settings from "../pages/admin/Settings";
 import OwnerDashboard from "../pages/owner/Dashboard";
 import MenuManagement from "../pages/owner/menu/MenuManagement";
 import OwnerProfile from "../pages/owner/OwnerProfile";
+import TodaysMenu from "../pages/owner/menu/TodaysMenu";
+import Orders from "../pages/owner/Orders";
 
 const AppRoutes = () => {
   return (
@@ -64,8 +66,9 @@ const AppRoutes = () => {
         >
           <Route path="dashboard" element={<OwnerDashboard />} />
           <Route path="profile" element={<OwnerProfile />} />
+          <Route path="todays-menu" element={<TodaysMenu />} />
           <Route path="menu" element={<MenuManagement />} />
-          {/* <Route path="orders" element={<Orders />} /> */}
+          <Route path="orders" element={<Orders />} />
           <Route path="settings" element={<Settings />} />
         </Route>
 
