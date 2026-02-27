@@ -1,51 +1,67 @@
-import DashboardCard from "../../components/dashboard/DashboardCard";
-// import MenuManagement from "../owner/MenuManagement";
-// import { useOwner } from "@/hooks/useOwner";
-
+import DashboardTemplate from "../../components/dashboard/DashboardTemplate";
+import { Users, Store } from "lucide-react";
+import { useOwner } from "../../hooks/useOwner";
+import { Navigate } from "react-router-dom";
 const OwnerDashboard = () => {
-return (
-    <div className="space-y-6">
+    const { owner, loading } = useOwner();
 
-      {/* Heading */}
-      <h1 className="text-2xl font-bold text-gray-800">
-        Welcome back 👋
-      </h1>
+  // ⏳ Wait for API
+  if (loading) return <p>Loading...</p>;
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <DashboardCard title="Students" value="45" color="blue" />
-        <DashboardCard title="Today Menu" value="Available" color="green" />
-        <DashboardCard title="Monthly Earnings" value="₹32,000" color="purple" />
-        <DashboardCard title="Pending Requests" value="3" color="red" />
-      </div>
+  // 🚨 Auto redirect if no mess profile
+  if (!owner?._id) {
+    return <Navigate to="/owner/profile" replace />;
+  }
+  const stats = [
+    {
+      title: "Total Students",
+      value: 210,
+      icon: Users,
+      cardBg: "bg-green-500",
+    },
+    {
+      title: "Active Menu Items",
+      value: 32,
+      icon: Store,
+      cardBg: "bg-purple-500",
+    },
+  ];
 
-      {/* Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        {/* Today Menu */}
-        <div className="bg-white p-4 rounded-xl shadow">
-          <h2 className="font-semibold mb-2">Today’s Menu 🍽️</h2>
-          <ul className="text-sm text-gray-600 space-y-1">
-            <li>✔ Rice</li>
-            <li>✔ Dal</li>
-            <li>✔ Sabji</li>
-            <li>✔ Roti</li>
-          </ul>
-        </div>
+  const quickActions = [
+    {
+      label: "Today's Menu",
+      to: "/owner/todays-menu",
+      colorFrom: "from-green-50",
+      colorTo: "to-green-100 hover:to-green-300",
+      textColor: "text-green-700",
+      buttonColor: "bg-green-600",
+    },
+    {
+      label: "Manage Menu",
+      to: "/owner/menu",
+      colorFrom: "from-purple-50",
+      colorTo: "to-purple-100 hover:to-purple-300",
+      textColor: "text-purple-700",
+      buttonColor: "bg-purple-600",
+    },
+    {
+      label: "View Orders",
+      to: "/owner/orders",
+      colorFrom: "from-amber-50",
+      colorTo: "to-amber-100 hover:to-amber-300",
+      textColor: "text-amber-700",
+      buttonColor: "bg-amber-600 hover:bg-amber-700",
+    },
+  ];
 
-        {/* Notifications */}
-        <div className="bg-white p-4 rounded-xl shadow">
-          <h2 className="font-semibold mb-2">Notifications 🔔</h2>
-          <p className="text-sm text-gray-600">
-            2 new student requests pending approval
-          </p>
-        </div>
-      </div>
-
-    </div>
+  return (
+    <DashboardTemplate
+      title="Dashboard"
+      subtitle="Welcome back, Mess Owner!"
+      stats={stats}
+      quickActions={quickActions}
+    />
   );
 };
 
 export default OwnerDashboard;
-
-
